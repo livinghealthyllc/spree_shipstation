@@ -1,9 +1,11 @@
 include SpreeShipstation
 
 module Spree
-  class ShipstationController < Spree::StoreController
+  class ShipstationController < Spree::BaseController
     include BasicSslAuthentication
     include Spree::DateParamHelper
+
+    layout false
 
     def export
       @shipments = Spree::Shipment.exportable
