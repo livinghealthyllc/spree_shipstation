@@ -29,13 +29,13 @@ xml.Orders(pages: (@shipments.total_count/50.0).ceil) {
     xml.Order {
       xml.OrderID        shipment.id
       xml.OrderNumber    Spree::Config.shipstation_number == :order ? order.number : shipment.number
-      xml.OrderDate      order.completed_at.strftime(date_format)
+      xml.OrderDate      order.completed_at.strftime("%m/%d/%Y %I:%M %p")
       xml.OrderStatus    shipment.state
       xml.LastModified   [order.completed_at, shipment.updated_at].max.strftime(date_format)
       xml.ShippingMethod shipment.shipping_method.try(:name)
       xml.OrderTotal     order.total
-      xml.TaxAmount      order.tax_total
-      xml.ShippingAmount order.ship_total
+      xml.TaxAmount      order.additional_tax_total
+      xml.ShippingAmount order.shipment_total
       xml.CustomField1   order.number
 
 =begin
