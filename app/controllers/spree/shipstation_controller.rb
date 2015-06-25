@@ -2,7 +2,7 @@ include SpreeShipstation
 
 module Spree
   class ShipstationController < Spree::BaseController
-    include BasicSslAuthentication
+    #include BasicSslAuthentication
     include Spree::DateParamHelper
 
     layout false
