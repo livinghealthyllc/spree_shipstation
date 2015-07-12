@@ -13,7 +13,7 @@ module Spree
         date_param(:end_date))
       .page(params[:page])
       .per(50)
-      render "export.xml"
+      render "export.xml.builder"
     end
 
     def shipnotify
