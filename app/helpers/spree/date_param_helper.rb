@@ -1,6 +1,6 @@
 module Spree
   module DateParamHelper
-    DATE_FORMAT = "%m/%d/%Y %H:%M"
+    DATE_FORMAT = "%m/%d/%Y %H:%M %Z"
 
   private
     def date_param(name)
