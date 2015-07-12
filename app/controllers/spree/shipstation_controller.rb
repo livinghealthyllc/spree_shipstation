@@ -8,11 +8,12 @@ module Spree
     skip_before_filter :verify_authenticity_token
 
     def export
-      @shipments = Spree::Shipment.exportable
-                           .between(date_param(:start_date),
-                                    date_param(:end_date))
-                           .page(params[:page])
-                           .per(50)
+      @shipments = Spree::Shipment.exportable.between(
+        date_param(:start_date),
+        date_param(:end_date))
+      .page(params[:page])
+      .per(50)
+      render "export.xml"
     end
 
     def shipnotify
