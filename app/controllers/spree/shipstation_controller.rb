@@ -23,11 +23,9 @@ module Spree
       number = params[:order_number]
       shipment = Spree::Shipment.find_by_number(number)
       if (shipment)
-        order = shipment.order.first
-        if (order)
-          order.shipment_state = 'shipped'
-          order.save!
-        end
+        order = shipment.order
+        order.shipment_state = 'shipped'
+        order.save!
       end
 
       if notice.apply
