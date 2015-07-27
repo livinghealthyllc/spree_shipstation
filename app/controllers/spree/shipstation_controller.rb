@@ -20,6 +20,13 @@ module Spree
     def shipnotify
       notice = Spree::ShipmentNotice.new(params)
 
+      number = params[:order_number]
+      order = Spree::Order.find_by_number(number)
+      if (order)
+        order.shipment_state = 'shipped'
+        order.save!
+      end
+
       if notice.apply
         render(text: 'success')
       else
