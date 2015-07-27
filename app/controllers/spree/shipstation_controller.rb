@@ -21,10 +21,13 @@ module Spree
       notice = Spree::ShipmentNotice.new(params)
 
       number = params[:order_number]
-      order = Spree::Order.find_by_number(number)
-      if (order)
-        order.shipment_state = 'shipped'
-        order.save!
+      shipment = Spree::Shipment.find_by_number(number)
+      if (shipment)
+        order = shipment.order.first
+        if (order)
+          order.shipment_state = 'shipped'
+          order.save!
+        end
       end
 
       if notice.apply
