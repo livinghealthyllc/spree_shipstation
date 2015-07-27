@@ -5,6 +5,8 @@ module Spree
     #include BasicSslAuthentication
     include Spree::DateParamHelper
 
+    skip_before_filter :verify_authenticity_token
+
     layout false
 
     def export
