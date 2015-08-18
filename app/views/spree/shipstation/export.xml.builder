@@ -67,7 +67,7 @@ xml.Orders(pages: (@shipments.total_count/50.0).ceil) {
                 variant.option_values.each do |value|
                   xml.Option {
                     xml.Name  value.option_type.presentation
-                    xml.Value value.name
+                    xml.Value value.option_type.presentation == "Color" ? value.presentation : value.name
                   }
                 end
               }
