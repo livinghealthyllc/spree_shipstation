@@ -2,7 +2,7 @@ include SpreeShipstation
 
 module Spree
   class ShipstationController < Spree::BaseController
-    #include BasicSslAuthentication
+    include BasicSslAuthentication
     include Spree::DateParamHelper
 
     skip_before_filter :verify_authenticity_token
