@@ -6,6 +6,13 @@ module Spree
     include Spree::DateParamHelper
 
     skip_before_filter :verify_authenticity_token
+    before_filter :authenticate
+
+    def authenticate
+      authenticate_or_request_with_http_basic('Authentication Required') do |username, password|
+        username == Spree::Config.shipstation_username && password == Spree::Config.shipstation_password
+      end
+    end
 
     layout false
 
