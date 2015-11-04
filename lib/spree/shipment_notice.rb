@@ -42,7 +42,6 @@ module Spree
     end
     
     def handle_error(error)
-      Rails.logger.error(error)
       @error = I18n.t(:import_tracking_error, error: error.to_s)
       false
     end
