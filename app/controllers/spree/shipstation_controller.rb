@@ -18,14 +18,13 @@ module Spree
 
     def export
       @shipments = Spree::Shipment.exportable
-                           .between(date_param(:start_date),
-                                    date_param(:end_date))
-                           .page(params[:page])
-                           .per(50)
+                       .between(date_param(:start_date), date_param(:end_date))
+                       .page(params[:page])
+                       .per(50)
     end
 
     def shipnotify
-      notice = Spree::ShipmentNotice.new(params)
+      @notice = notice = Spree::ShipmentNotice.new(params)
 
       number = params[:order_number]
       shipment = Spree::Shipment.find_by_number(number)
@@ -36,9 +35,17 @@ module Spree
       end
 
       if notice.apply
-        render(text: 'success')
+        @text = 'success'
+        format.html { render :html => @text, status: :ok }
+        format.xml { render template: "spree/shipstation/shipnotify", status: :ok }
+        format.json { render :json => {text: @text, status: :ok} }
       else
-        render(text: notice.error, status: :bad_request)
+        @text = notice.error
+        respond_to do |format|
+          format.html { render :html => @text, status: :bad_request }
+          format.xml { render template: "spree/shipstation/shipnotify", status: :bad_request }
+          format.json { render :json => {text: @text, status: :bad_request} }
+        end
       end
     end
   end

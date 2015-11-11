@@ -11,7 +11,7 @@ gem 'database_cleaner', '< 1.1.0' # >= 1.1.0 is broken w/ SQLite3 https://github
 gem 'rspec-rails'
 gem 'spork'
 gem 'fuubar'
-gem 'byebug'
+#gem 'byebug'
 gem 'pry-rails'
 gem 'factory_girl_rails'
 
