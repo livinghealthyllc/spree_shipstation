@@ -36,15 +36,17 @@ module Spree
 
       if notice.apply
         @text = 'success'
-        format.html { render :html => @text, status: :ok }
-        format.xml { render template: "spree/shipstation/shipnotify", status: :ok }
-        format.json { render :json => {text: @text, status: :ok} }
+        respond_to do |format|
+          format.html { render(text: @text, status: :ok) }
+          format.xml { render template: "spree/shipstation/shipnotify", status: :ok }
+          format.json { render json: {text: @text, status: :ok} }
+        end
       else
         @text = notice.error
         respond_to do |format|
-          format.html { render :html => @text, status: :bad_request }
+          format.html { render(@text, status: :bad_request) }
           format.xml { render template: "spree/shipstation/shipnotify", status: :bad_request }
-          format.json { render :json => {text: @text, status: :bad_request} }
+          format.json { render json: {text: @text, status: :bad_request} }
         end
       end
     end
