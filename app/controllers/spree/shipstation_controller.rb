@@ -17,7 +17,8 @@ module Spree
     layout false
 
     def export
-      @shipments = Spree::Shipment.exportable
+      @shipments = Spree::Shipment
+                       #.exportable #commented because the shipstation should recieve the pending orders
                        .between(date_param(:start_date), date_param(:end_date))
                        .page(params[:page])
                        .per(50)
