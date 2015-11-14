@@ -21,8 +21,14 @@ describe Spree::ShipstationController do
         get :export, start_date: '12/31/2013 8:00', end_date: '1/13/2014 23:00', use_route: :spree
       end
 
-      specify { response.should be_success }
-      specify { assigns(:shipments).should == :some_shipments}
+      # specify { response.should be_success }
+      specify { expect(response).to eq(:success) }
+      specify { expect(response).to be eq(:success) }
+      specify { expect(response).to be_success }
+      specify { expect(response).to have_http_status(200) }
+
+      # specify { assigns(:shipments).should == :some_shipments}
+      specify { expect(assigns(:shipments)).to be eq(:some_shipments) }
     end
 
     context "shipnotify" do

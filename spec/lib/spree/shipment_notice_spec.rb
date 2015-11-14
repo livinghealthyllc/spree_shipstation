@@ -23,7 +23,8 @@ describe Spree::ShipmentNotice do
           shipment.should_receive(:touch).with(:shipped_at)
         end
 
-        specify { notice.apply.should be_true }
+        # specify { notice.apply.should be_true }
+        specify { expect(notice.apply).to be true }
       end
 
       context "transition fails" do
@@ -34,8 +35,10 @@ describe Spree::ShipmentNotice do
           @result = notice.apply
         end
 
-        specify { @result.should be_false }
-        specify { notice.error.should_not be_blank }
+        specify { expect(@result).to be false }
+
+        #specify { notice.error.should_not be_blank }
+        specify { expect(notice.error).not_to be_empty }
       end
     end
 
@@ -54,7 +57,8 @@ describe Spree::ShipmentNotice do
       context "transition succeeds" do
         before { shipment.stub_chain(:reload, :update_attribute).with(:state, 'shipped') }
 
-        specify { notice.apply.should be_true }
+        # specify { notice.apply.should be_true }
+        specify { expect(notice.apply).to be true }
       end
     end
 
@@ -65,8 +69,12 @@ describe Spree::ShipmentNotice do
         @result = notice.apply
       end
 
-      specify { @result.should be_false }
-      specify { notice.error.should_not be_blank }
+      #specify { @result.should be_false }
+      specify { expect(@result).to be false }
+
+      # specify { notice.error.should_not be_blank }
+      # specify { expect(notice.error).to be_truthy }
+      specify { expect(notice.error).not_to be_blank }
     end
 
     context "shipment already shipped" do
@@ -78,7 +86,8 @@ describe Spree::ShipmentNotice do
         shipment.should_receive(:update_attribute).with(:tracking, '1Z1231234')
       end
 
-      specify { notice.apply.should be_true }
+      #specify { notice.apply.should be_true }
+      specify { expect(notice.apply).to be true }
     end
   end
 end

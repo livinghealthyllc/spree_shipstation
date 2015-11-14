@@ -77,6 +77,7 @@ To do this, go to **Settings** and select **Stores**. Then click **Add Store**, 
 - For **Paid Status** enter `ready`
 - For **Shipped Status** enter `shipped`
 - For **Cancelled Status** enter `cancelled`
+- For **On-Hold Status** enter `on_hold`
 
 
 Testing

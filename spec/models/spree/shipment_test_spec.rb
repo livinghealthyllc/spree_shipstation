@@ -1,9 +1,14 @@
 require 'spec_helper'
+# require 'factory_girl_rails'
 
 describe Spree::Shipment do
   context "between" do
     before do
       @active = []
+      @users = []
+      #
+      # user = FactoryGirl.create(:user, :head_buster)
+      # @users << user
 
       create_shipment(updated_at: 2.day.ago, order: create(:order, updated_at: 2.day.ago))
       create_shipment(updated_at: 2.day.from_now, order: create(:order, updated_at: 2.day.from_now))
@@ -13,28 +18,40 @@ describe Spree::Shipment do
       # New shipments
       @active << create_shipment(updated_at: Time.now)
       @active << create_shipment(updated_at: Time.now)
+      @orders = []
+      @orders << create(:order, updated_at: Time.now)
+
+      # ["QM","CDC","SI","QS"].each do |n|
+      FactoryGirl.create(:grau, nome: "QM")
+      # end
     end
+
+    # specify { expect(@users.count).to eq(1) }
+
+
 
     # Get new shipments
     from = Time.now - 1.minute
     to = Time.now + 1.minute
 
-    subject(:orders) { Spree::Order.where(updated_at: from..to) }
+    orders = Spree::Order.where(updated_at: from..to)
     specify { expect(orders.size).to eq(3) }
+    specify { expect(@orders.size).to eq(1) }
 
-    subject(:shipments) { Spree::Shipment.between(from, to) }
+    shipments = Spree::Shipment.between(from, to)
     # shipments = Spree::Shipment.joins(:order).where(updated_at: from..to, spree_orders: { updated_at: from..to } )
     specify { expect(shipments.size).to eq(@active.size) } # check the searching of the active shipments
 
-    subject(:all_shipments) { Spree::Shipment.all }
+    all_shipments = Spree::Shipment.all
     specify { expect(all_shipments.size).to eq(5) } # check the total shipments
     specify { expect(@active.size).to eq(3) } # check size of the @active shipments
 
-    #
+
     # subject { Spree::Shipment.between(Time.now-1.hour, Time.now + 1.hours) }
     #
     # # specify { should have(3).shipment }
     # # specify { expect(subject.size).to eq(3) }
+    # specify { expect(subject.size).to include(3) }
     #
     # # specify { should == @active }
     # # specify { expect(subject).to eql(@active) }
@@ -86,6 +103,11 @@ describe Spree::Shipment do
     FactoryGirl.create(:shipment, options).tap do |shipment|
       shipment.update_column(:state, options[:state]) if options[:state]
       shipment.update_column(:updated_at, options[:updated_at]) if options[:updated_at]
+      # shipment.update_column(:order, options[:order]) if options[:order]
+      # if options[:order]
+      #     shipment.order = create(:order, updated_at:Time.now)
+      #     shipment.save!
+      # end
     end
   end
 

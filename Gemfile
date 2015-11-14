@@ -14,6 +14,7 @@ gem 'fuubar'
 #gem 'byebug'
 gem 'pry-rails'
 gem 'factory_girl_rails'
+gem 'rspec-activemodel-mocks'
 
 #gem 'spree', github: 'spree/spree', branch: '3-0-stable'
 # Provides basic authentication functionality for testing parts of your engine

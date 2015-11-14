@@ -3,4 +3,15 @@ FactoryGirl.define do
   #
   # Example adding this to your spec_helper will load these Factories for use:
   # require 'spree_shipstation/factories'
+
+  # factory :shipment do
+  #   transient do
+  #     updated_at Time.now
+  #   end
+  #
+  #   order do
+  #     Spree::Order.find_by(updated_at: updated_at) || FactoryGirl.create(:order, updated_at: updated_at)
+  #   end
+  # end
+
 end
