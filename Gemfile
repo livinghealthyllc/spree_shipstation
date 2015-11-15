@@ -13,7 +13,8 @@ gem 'spork'
 gem 'fuubar'
 #gem 'byebug'
 gem 'pry-rails'
-gem 'factory_girl_rails'
+
+gem 'factory_girl_rails', :require => false
 gem 'rspec-activemodel-mocks'
 
 #gem 'spree', github: 'spree/spree', branch: '3-0-stable'

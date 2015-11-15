@@ -4,20 +4,37 @@ describe Spree::Shipment do
   context "between" do
     before do
       @active = []
+      dt1 = 1.day.ago
+      dt2 = 1.day.from_now
 
-      create_shipment(updated_at: 2.day.ago, order: create(:order, updated_at: 2.day.ago))
-      create_shipment(updated_at: 2.day.from_now, order: create(:order, updated_at: 2.day.from_now))
-    
+      @order1 = create(:order, updated_at: dt1)
+      @shipment1 = create_shipment(updated_at: dt1)
+      @shipment1.order = @order1
+
+      @order2 = create(:order, updated_at: dt2)
+      @shipment2 = create_shipment(updated_at: dt2)
+      @shipment2.order = @order2
+
+      @order_now = create(:order, updated_at: dt1)
+      @shipment3 = create_shipment(updated_at: 1.week.ago)
+      @shipment3.order = @order_now
+
+      @shipment4 = create_shipment(updated_at: Time.now)
+      # @shipment4.order = @order4
+
+      @shipment5 = create_shipment(updated_at: Time.now)
+      # @shipment5.order = @order5
+
       # Old shipment thats order was recently updated..
-      @active << create_shipment(updated_at: 1.week.ago, order: create(:order, updated_at: Time.now))
+      @active << @shipment3
       # New shipments
-      @active << create_shipment(updated_at: Time.now)
-      @active << create_shipment(updated_at: Time.now)
+      @active << @shipment4
+      @active << @shipment4
     end
 
     # Get new shipments
-    from = Time.now - 1.minute
-    to = Time.now + 1.minute
+    from = Time.now - 1.hour
+    to = Time.now + 1.hour
 
     subject(:orders) { Spree::Order.where(updated_at: from..to) }
     specify { expect(orders.size).to eq(3) }
