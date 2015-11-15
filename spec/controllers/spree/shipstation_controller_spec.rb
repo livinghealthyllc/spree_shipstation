@@ -11,24 +11,26 @@ describe Spree::ShipstationController do
 
     context "export" do
       let(:shipments) { mock }
+      # let(:shipments) { FactoryGirl.create_list(:shipments) }
 
       before do
         Spree::Shipment.stub_chain(:exportable, :between).with(Time.new(2013, 12, 31,  8, 0, 0, "+00:00"),
                                                                Time.new(2014,  1, 13, 23, 0, 0, "+00:00"))
                                                          .and_return(shipments)
-        shipments.stub_chain(:page, :per).and_return(:some_shipments)
+        @some_shipments = shipments.stub_chain(:page, :per).and_return(:some_shipments)
 
         get :export, start_date: '12/31/2013 8:00', end_date: '1/13/2014 23:00', use_route: :spree
       end
 
       # specify { response.should be_success }
-      specify { expect(response).to eq(:success) }
-      specify { expect(response).to be eq(:success) }
+
+      # specify { expect(response).to eq(:success) }
+      # specify { expect(response).to be eq(:success) }
       specify { expect(response).to be_success }
-      specify { expect(response).to have_http_status(200) }
+      # specify { expect(response).to have_http_status(200) }
 
       # specify { assigns(:shipments).should == :some_shipments}
-      specify { expect(assigns(:shipments)).to be eq(:some_shipments) }
+      specify { expect(assigns(:shipments)).to eq(@some_shipments) }
     end
 
     context "shipnotify" do
@@ -47,8 +49,12 @@ describe Spree::ShipstationController do
           post :shipnotify, order_number: 'S12345', use_route: :spree
         end
 
-        specify { response.should be_success }
-        specify { response.body.should =~ /success/ }
+        # specify { response.should be_success }
+        # specify { response.body.should =~ /success/ }
+
+        specify { expect(response).to be_success }
+        specify { expect(response.body).to match(/success/) }
+
       end
 
       context "shipment not found" do
@@ -59,8 +65,12 @@ describe Spree::ShipstationController do
           post :shipnotify, order_number: 'S12345', use_route: :spree
         end
 
-        specify { response.code.should == '400' }
-        specify { response.body.should =~ /failed/ }
+        # specify { response.code.should == '400' }
+        # specify { response.body.should =~ /failed/ }
+
+        specify { expect(response.code).to eq('400') }
+        specify { expect(response.body).to match(/failed/) }
+
       end
     end
 
@@ -73,14 +83,14 @@ describe Spree::ShipstationController do
     it "returns error" do
       get :export, use_route: :spree
 
-      response.code.should == '401'
+      #response.code.should == '401'
+      expect(response.code).to eq('401')
     end
   end
 
   def login
-    config(username: "mario", password: 'lemieux')
-
     user, pw = 'mario', 'lemieux'
+    config(username: user, password: pw)
     request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user,pw)
   end
 

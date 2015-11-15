@@ -29,7 +29,7 @@ describe Spree::Shipment do
       @active << @shipment3
       # New shipments
       @active << @shipment4
-      @active << @shipment4
+      @active << @shipment5
     end
 
     # Get new shipments
@@ -39,6 +39,7 @@ describe Spree::Shipment do
     subject(:orders) { Spree::Order.where(updated_at: from..to) }
     specify { expect(orders.size).to eq(3) }
 
+
     subject(:shipments) { Spree::Shipment.between(from, to) }
     # shipments = Spree::Shipment.joins(:order).where(updated_at: from..to, spree_orders: { updated_at: from..to } )
     specify { expect(shipments.size).to eq(@active.size) } # check the searching of the active shipments
@@ -47,6 +48,8 @@ describe Spree::Shipment do
     specify { expect(all_shipments.size).to eq(5) } # check the total shipments
     specify { expect(@active.size).to eq(3) } # check size of the @active shipments
 
+    shipments2 = Spree::Shipment.where(updated_at: from..to)
+    specify { expect(shipments2.size).to eq(@active.size) } # check the searching of the active shipments
     #
     # subject { Spree::Shipment.between(Time.now-1.hour, Time.now + 1.hours) }
     #
