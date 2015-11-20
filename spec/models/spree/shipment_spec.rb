@@ -4,29 +4,31 @@ describe Spree::Shipment do
   context "between" do
     before do
       @active = []
-      dt1 = 1.day.ago
-      dt2 = 1.day.from_now
+      @dt1 = 1.day.ago
+      @dt2 = 1.day.from_now
+      @dt_now = Time.now
 
-      @order1 = create(:order, updated_at: dt1)
-      @shipment1 = create_shipment(updated_at: dt1)
-      @shipment1.order = @order1
+      Timecop.travel(@dt1) do
+        @shipment1 = create(:shipment, order: create(:order))
+      end
 
-      @order2 = create(:order, updated_at: dt2)
-      @shipment2 = create_shipment(updated_at: dt2)
-      @shipment2.order = @order2
-
-      @order_now = create(:order, updated_at: Time.now)
-      @shipment3 = create_shipment(updated_at: 1.week.ago)
-      @shipment3.order = @order_now
-
-      @shipment4 = create_shipment(updated_at: Time.now)
-      # @shipment4.order = @order4
-
-      @shipment5 = create_shipment(updated_at: Time.now)
-      # @shipment5.order = @order5
+      Timecop.travel(@dt2) do
+        @shipment2 = create(:shipment, order: create(:order))
+      end
 
       # Old shipment thats order was recently updated..
+      @order3 = create(:order, updated_at: @dt_now)
+      Timecop.travel(1.week.ago) do
+        @shipment3 = create(:shipment)
+      end
+      @shipment3.order = @order3
+      @shipment3.save!
       @active << @shipment3
+      # End Old shipment thats order was recently updated..
+
+      @shipment4 = create(:shipment, order: create(:order))
+      @shipment5 = create(:shipment, order: create(:order))
+
       # New shipments
       @active << @shipment4
       @active << @shipment5
@@ -36,36 +38,22 @@ describe Spree::Shipment do
     from = Time.now - 1.hour
     to = Time.now + 1.hour
 
-    subject(:orders) { Spree::Order.where(updated_at: from..to) }
-    specify { expect(orders.size).to eq(3) } # last orders
-
-
     subject(:shipments) { Spree::Shipment.between(from, to) }
-    # shipments = Spree::Shipment.joins(:order).where(updated_at: from..to, spree_orders: { updated_at: from..to } )
     specify { expect(shipments.size).to eq(@active.size) } # check the searching of the active shipments
-
-    subject(:all_shipments) { Spree::Shipment.all }
-    specify { expect(all_shipments.size).to eq(5) } # check the total shipments
-    specify { expect(@active.size).to eq(3) } # check size of the @active shipments
 
     shipments2 = Spree::Shipment.where(updated_at: from..to)
     specify { expect(shipments2.size).to eq(@active.size) } # check the searching of the active shipments
-    #
-    # subject { Spree::Shipment.between(Time.now-1.hour, Time.now + 1.hours) }
-    #
-    # # specify { should have(3).shipment }
-    # # specify { expect(subject.size).to eq(3) }
-    #
-    # # specify { should == @active }
-    # # specify { expect(subject).to eql(@active) }
-    # specify { expect(subject.sort).to eql(@active.sort) }
-    # specify { expect(subject).to match_array(@active) }
+
+    specify { expect(@active.size).to eq(3) } # check size of the @active shipments
+
+    subject(:all_shipments) { Spree::Shipment.all }
+    specify { expect(all_shipments.size).to eq(5) } # check the total shipments
 
   end
 
   context "exportable" do
     let!(:pending) { create_shipment(state: 'pending') }
-    let!(:ready)   { create_shipment(state: 'ready')   }
+    let!(:ready) { create_shipment(state: 'ready') }
     let!(:shipped) { create_shipment(state: 'shipped') }
 
     subject { Spree::Shipment.exportable }
@@ -73,10 +61,10 @@ describe Spree::Shipment do
     # specify { should have(2).shipments }
     specify { expect(subject.count).to eq(2) }
 
-    specify { should include(ready)}
-    specify { should include(shipped)}
+    specify { should include(ready) }
+    specify { should include(shipped) }
 
-    specify { should_not include(pending)}
+    specify { should_not include(pending) }
   end
 
   context "shipped_email" do
