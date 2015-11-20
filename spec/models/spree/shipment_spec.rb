@@ -73,9 +73,12 @@ describe Spree::Shipment do
     context "enabled" do
       it "sends email" do
         Spree::Config.send_shipped_email = true
-        mail_message = double("Mail::Message")
-        Spree::ShipmentMailer.should_receive(:shipped_email).with(shipment).and_return mail_message
-        mail_message.should_receive :deliver
+        mail_message = double(Mail::Message)
+        expect(Spree::ShipmentMailer).to receive(:shipped_email)
+                                         .with(shipment)
+                                         .and_return(mail_message)
+        expect(mail_message).to receive(:deliver)
+        # expect(mail_message).to receive(:deliver).with(no_args)
         shipment.ship!
       end
     end
@@ -83,7 +86,7 @@ describe Spree::Shipment do
     context "disabled" do
       it "doesnt send email" do
         Spree::Config.send_shipped_email = false
-        Spree::ShipmentMailer.should_not_receive(:shipped_email)
+        expect(Spree::ShipmentMailer).not_to receive(:shipped_email)
         shipment.ship!
       end
     end
