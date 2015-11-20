@@ -52,7 +52,8 @@ describe Spree::ShipstationController, type: :controller do
         # specify { response.body.should =~ /success/ }
 
         specify { expect(response).to be_success }
-        specify { expect(response.body).to match(/success/) }
+        # specify { expect(response.body).to match(/success/) }
+        specify { expect(response).to render_template("shipnotify") }
       end
 
       context "shipment not found" do
@@ -67,8 +68,8 @@ describe Spree::ShipstationController, type: :controller do
         # specify { response.body.should =~ /failed/ }
 
         specify { expect(response.code).to eq('400') }
-        specify { expect(response.body).to match(/failed/) }
-
+        # specify { expect(response.body).to match(/failed/) }
+        specify { expect(response).to render_template("shipnotify") }
       end
     end
 

@@ -73,7 +73,7 @@ describe Spree::Shipment do
     context "enabled" do
       it "sends email" do
         Spree::Config.send_shipped_email = true
-        mail_message = double "Mail::Message"
+        mail_message = double("Mail::Message")
         Spree::ShipmentMailer.should_receive(:shipped_email).with(shipment).and_return mail_message
         mail_message.should_receive :deliver
         shipment.ship!
@@ -90,7 +90,6 @@ describe Spree::Shipment do
   end
 
   def create_shipment(options={})
-    # Spree::Shipment.create(updated_at: Time.now)
     FactoryGirl.create(:shipment, options).tap do |shipment|
       shipment.update_column(:state, options[:state]) if options[:state]
       shipment.update_column(:updated_at, options[:updated_at]) if options[:updated_at]
