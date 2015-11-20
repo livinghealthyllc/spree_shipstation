@@ -15,7 +15,7 @@ describe Spree::Shipment do
       @shipment2 = create_shipment(updated_at: dt2)
       @shipment2.order = @order2
 
-      @order_now = create(:order, updated_at: dt1)
+      @order_now = create(:order, updated_at: Time.now)
       @shipment3 = create_shipment(updated_at: 1.week.ago)
       @shipment3.order = @order_now
 
@@ -37,7 +37,7 @@ describe Spree::Shipment do
     to = Time.now + 1.hour
 
     subject(:orders) { Spree::Order.where(updated_at: from..to) }
-    specify { expect(orders.size).to eq(3) }
+    specify { expect(orders.size).to eq(3) } # last orders
 
 
     subject(:shipments) { Spree::Shipment.between(from, to) }
@@ -85,7 +85,7 @@ describe Spree::Shipment do
     context "enabled" do
       it "sends email" do
         Spree::Config.send_shipped_email = true
-        mail_message = mock "Mail::Message"
+        mail_message = double "Mail::Message"
         Spree::ShipmentMailer.should_receive(:shipped_email).with(shipment).and_return mail_message
         mail_message.should_receive :deliver
         shipment.ship!

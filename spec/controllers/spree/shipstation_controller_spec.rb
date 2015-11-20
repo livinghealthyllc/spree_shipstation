@@ -1,45 +1,44 @@
 require 'spec_helper'
 
-describe Spree::ShipstationController do
+describe Spree::ShipstationController, type: :controller do
+
   before do
-    controller.stub(check_authorization: false, spree_current_user: FactoryGirl.create(:user))
+    # controller.stub(check_authorization: false, spree_current_user: FactoryGirl.create(:user)) # TODO: uncomment and fix it
+    # controller.stub(:shipnotify)
     @request.accept = 'application/xml'
   end
+
 
   context "logged in" do
     before { login }
 
     context "export" do
-      let(:shipments) { mock }
-      # let(:shipments) { FactoryGirl.create_list(:shipments) }
+      let(:shipments) { double(:shipments) }
 
       before do
-        Spree::Shipment.stub_chain(:exportable, :between).with(Time.new(2013, 12, 31,  8, 0, 0, "+00:00"),
-                                                               Time.new(2014,  1, 13, 23, 0, 0, "+00:00"))
-                                                         .and_return(shipments)
-        @some_shipments = shipments.stub_chain(:page, :per).and_return(:some_shipments)
+        Spree::Shipment.stub_chain(:exportable, :between).with(Time.new(2013, 12, 31, 8, 0, 0, "+00:00"),
+                                                               Time.new(2014, 1, 13, 23, 0, 0, "+00:00"))
+            .and_return(shipments)
+        shipments.stub_chain(:page, :per).and_return(:some_shipments)
 
         get :export, start_date: '12/31/2013 8:00', end_date: '1/13/2014 23:00', use_route: :spree
       end
 
       # specify { response.should be_success }
-
-      # specify { expect(response).to eq(:success) }
-      # specify { expect(response).to be eq(:success) }
       specify { expect(response).to be_success }
-      # specify { expect(response).to have_http_status(200) }
+      specify { expect(response).to have_http_status(200) }
 
       # specify { assigns(:shipments).should == :some_shipments}
-      specify { expect(assigns(:shipments)).to eq(@some_shipments) }
+      specify { expect(assigns(:shipments)).to eq(:some_shipments) }
     end
 
     context "shipnotify" do
-      let(:notice) { mock(:notice) }
+      let(:notice) { double(:notice) }
 
       before do
         Spree::ShipmentNotice.should_receive(:new)
-                             .with(hash_including(order_number: 'S12345'))
-                             .and_return(notice)
+            .with(hash_including(order_number: 'S12345'))
+            .and_return(notice)
       end
 
       context "shipment found" do
@@ -54,7 +53,6 @@ describe Spree::ShipstationController do
 
         specify { expect(response).to be_success }
         specify { expect(response.body).to match(/success/) }
-
       end
 
       context "shipment not found" do
@@ -91,7 +89,7 @@ describe Spree::ShipstationController do
   def login
     user, pw = 'mario', 'lemieux'
     config(username: user, password: pw)
-    request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user,pw)
+    request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, pw)
   end
 
   def config(options = {})

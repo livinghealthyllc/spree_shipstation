@@ -8,10 +8,10 @@ FactoryGirl.modify do
     #   build(:order, evaluator.updated_at, shipment: shipment)
     # end
 
-    # create instance without validation
-    factory :shipment_no_validate do
-      to_create {|instance| instance.save!(validate: false) }
-    end
+    # # create instance without validation
+    # factory :shipment_no_validate do
+    #   to_create {|instance| instance.save!(validate: false) }
+    # end
 
     # should work but it doesn'not work
     # trait :trait_updated_at do
