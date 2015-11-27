@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.author    = 'Dmitry Kosenko'
   s.email     = 'kosenkodmitryv@gmail.com'
-  s.homepage  = 'http://www.shopomob.ru'
+  s.homepage  = 'https://github.com/KosenkoDmitriy/spree_shipstation'
 
   #s.files       = `git ls-files`.split("\n")
   #s.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")

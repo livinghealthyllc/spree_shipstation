@@ -97,6 +97,12 @@ To run tests with guard (preferred):
     $ bundle exec guard
 
 
+Contribute
+-----------
+
+Pull requests for features and bug fix with tests are welcome.
+
+
 Caveats
 -------
 - If you change the shipping method of an order in ShipStation, the change will not be reflected in Spree and the tracking link might not work
